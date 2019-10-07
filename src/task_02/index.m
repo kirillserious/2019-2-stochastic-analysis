@@ -1,20 +1,39 @@
 %% Задача №1. Строим графики эмпирической и теоретической функций распределения.
-N = 100;    % Размер выборки
+N = 10000;    % Размер выборки
 
 figure();
 hold on;
 grid on;
 
-cantor_vector = cantor_generate(N);
-[f, x] = ecdf(cantor_vector);
-plot(x, f);
+cantors = cantor_generate(N);
+[fs, xs] = ecdf(cantors);
+plot(xs, fs);
 
-[f, x] = devils_staircase();
-plot(x, f);
+[fs, xs] = devils_staircase();
+plot(xs, fs);
 
-legend({'Эмпирическая функция распределения', 'Лестница Кантора'});
+legend({'Эмпирическая функция распределения', 'Канторова лестница'});
 xlabel('$$x$$', 'interpreter', 'latex');
 
+clear cantors xs fs;
+%% Задача №3. Иллюстрируем сходимость мат.ожидания и дисперсии.
+left_N  = 50000;
+right_N = 100000;
+
+figure;
+hold on;
+grid on;
+
+ns = 1:right_N;
+cantors = cantor_generate(right_N);
+expecteds = cumsum(cantors) ./ ns;
+
+plot(left_N:right_N, expecteds(left_N:end));
+plot([left_N, right_N], [0.5, 0.5]);
+xlabel('$$n$$', 'interpreter', 'latex');
+legend({'$$E\,[X] = \frac{X_1 + \ldots + X_n}{n}$$', '$$E\,[X] = \frac12$$'}, 'interpreter', 'latex');
+
+clear ns cantors expecteds;
 
 function [f, x] = devils_staircase(recdepth)
 % Строит канторову лестницу. Работает рекурсивным образом.
