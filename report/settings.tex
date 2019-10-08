@@ -58,6 +58,10 @@
 % Новое доказательство
 \renewenvironment{proof}{\parД о к а з а т е л ь с т в о.}{\hfill$\blacksquare$}
 
+% Нумерация рисунков
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+
 % Переопределение математических штук
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\p}{\mathbb{P}}
