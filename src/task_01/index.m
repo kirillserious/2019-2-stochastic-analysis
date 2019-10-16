@@ -3,7 +3,7 @@
 
 n = 50;    % Количество экспирементов
 p = 0.3;   % Вероятность "успеха"
-N = 10000; % Размер выборки
+N = 100000; % Размер выборки
 
 figure();
 hold on;
@@ -75,13 +75,18 @@ grid on;
 
 geom_results = geom_generate(p, 1, N);
 
-usual_plot  = histogram(geom_results, 'Normalization', 'probability');
-offset_plot = histogram(geom_results(geom_results >= m), 'Normalization', 'probability');
+histogram(geom_results, 'Normalization', 'probability', 'FaceAlpha', 0.7);
+histogram(geom_results(geom_results >= m) - m, ...
+        'Normalization', 'probability', 'FaceAlpha', 0.7);
 clear geom_results;
 
-title(sprintf('Отсутствие памяти у X~Geom(%4.2f), m=%d', p, m));
-xlabel('n');
-legend([usual_plot, offset_plot], {'P( X=n )', 'P( X=n+m | X \geq m )'});
+% Двигаем оси правильно
+alpha = 0.0005;                             % Сколько можно не включить
+f_inv = @(x) log(1 - x) / log(1 - p) - 1;   % Обратная функция распределения
+xlim([0, f_inv(1-alpha)]);
+
+xlabel('$$n$$', 'interpreter', 'latex');
+legend('$$\mbox{P}( X=n )$$', '$$\mbox{P}( X=n+m\,|\,X \geq m )$$', 'interpreter','latex');
 clear usual_plot offset_plot;
 
 %% Задача 3. Строим траекторию процесса игры в Орлянку.
@@ -99,10 +104,9 @@ results = cumsum(results) / sqrt(n);
 plot(1:n, results);
 clear ts results;
 
-title('Поведение нормированной суммы Y игры в Орлянку');
 legend('$$Y(i) = \frac{X_1 +\ldots+ X_i}{\sqrt{n}}$$', 'interpreter', 'latex');
-xlabel('i');
-ylabel('Y');
+xlabel('$$i$$', 'interpreter', 'latex');
+ylabel('$$Y$$', 'interpreter', 'latex');
 
 function result = bin_coefficient(n, ks)
     % Биномиальный коэффициент C_n^k

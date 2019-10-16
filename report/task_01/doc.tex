@@ -48,25 +48,9 @@ $$
 $$
         X = \sum\limits_{i = 1}^{n} Y_i.
 $$
-\begin{figure}[h]
-        \hfill
-        \includegraphics[width=70mm]{task_01/bi1000.eps}
-        \hfill
-        \hfill
-        \includegraphics[width=70mm]{task_01/bi100000.eps}
-        \hfill
-        \caption{Гистограмма биномиального распределения при $10^3$~(слева) и $10^5$~(справа) испытаний.}
-\end{figure}
+
 
 \subsection{Задача №2}
-\begin{figure}[h]
-        \noindent
-        \centering
-        {
-                \includegraphics[width=120mm]{task_01/geom100000.eps}
-        }
-        \caption{Гистограмма геометрического распределения при $10^5$ испытаний.}
-\end{figure}
 \begin{definition}
         Будем говорить, что случайная величина $X$ имеет \textit{геометрическое распределение}, если
         $$
@@ -81,18 +65,8 @@ $$
         $$
                 X\sim\mbox{Geom}(p).
         $$
+        Зная интерпретацию, мы легко строим датчик и для геометрического распределения.
 \end{definition}
-
-Зная интерпретацию, мы легко строим датчик и для геометрического распределения.
-
-\begin{figure}[h]
-        \noindent
-        \centering
-        {
-                \includegraphics[width=120mm]{task_01/memory.eps}
-        }
-        \caption{Гистограмма геометрического распределения, демонстрирующая его свойство отсутствия памяти.}
-\end{figure}
 
 \begin{assertion}[Свойство отсутствия памяти]
         Пусть $X\sim\mbox{Geom}(p)$, тогда для любых $n,\,m\in\N_0$ справедливо
@@ -122,14 +96,7 @@ $$
 \subsection{Задача №3}
 
 Рассмотрим игру Орлянка, правила которой описаны в формулировке задания и построим траекторию заданного процесса $Y(i)$.
-\begin{figure}[h]
-        \noindent
-        \centering
-        {
-                \includegraphics[width=120mm]{task_01/orl.eps}
-        }
-        \caption{Иллюстрация варианта поведения нормированной суммы $Y(i)$.}
-\end{figure}
+
 
 В данной нормированной сумме $Y$ фигурируют независимые одинаково распределенные случйные величины $X_i$.
 Посчитаем их математическое ожидание и дисперсию.
@@ -160,3 +127,31 @@ $$
 $$
         -\frac32\leqslant\lim\limits_{n\to\infty}Y(n)\leqslant\frac32.
 $$
+
+\clearpage
+\begin{figure}[t]
+        \includegraphics[width=0.5\linewidth]{task_01/bi1000.eps}
+        \includegraphics[width=0.5\linewidth]{task_01/bi100000.eps}
+        \caption{Гистограмма биномиального распределения случайной величины с параметрами $n = 50$, $p = \frac{3}{10}$ при $10^3$~(слева) и $10^5$~(справа) испытаний.}
+\end{figure}
+\begin{figure}[b]
+        \includegraphics[width=0.5\linewidth]{task_01/geom1000.eps}
+        \includegraphics[width=0.5\linewidth]{task_01/geom100000.eps}
+        \caption{Гистограмма геометрического распределения случайной величины с параметром $p = \frac{3}{10}$ при $10^3$~(слева) и $10^5$~(справа) испытаний.}
+\end{figure}
+\begin{figure}[h]
+        \noindent
+        \centering
+        {
+                \includegraphics[width=120mm]{task_01/memory.eps}
+        }
+        \caption{Гистограмма геометрического распределения, демонстрирующая его свойство отсутствия памяти. Здесь задан параметр геометрического распределения $p = \frac{2}{10}$, а также <<сдвиг>> $m = 10$.}
+\end{figure}
+\begin{figure}[h]
+        \noindent
+        \centering
+        {
+                \includegraphics[width=120mm]{task_01/orl.eps}
+        }
+        \caption{Иллюстрация варианта поведения нормированной суммы $Y(i)$ игры в орлянку на отрезке $1 \leqslant i\leqslant 10^3$.}
+\end{figure}
