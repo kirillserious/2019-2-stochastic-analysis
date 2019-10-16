@@ -3,7 +3,7 @@
 
 n = 50;    % Количество экспирементов
 p = 0.3;   % Вероятность "успеха"
-N = 100000; % Размер выборки
+N = 10000; % Размер выборки
 
 figure();
 hold on;
@@ -20,11 +20,12 @@ results     = bin_coefficient(n, ks) .* ( p ).^ks .* ( 1 - p ).^(n-ks);
 theory_plot = plot(ks, results, '*');
 clear ks results;
 
+% Двигаем оси в соответствии с правилом трёх сигм
+xlim(n*p + 3*sqrt(n*p*(1-p)) * [-1 1]);
+
 % Делаем графики красивыми
-title(sprintf(...
-        'Распределение случайной величины X~Bi (%d, %4.2f)', n, p));
-xlabel('k');
-ylabel('P(X = k)');
+xlabel('$$k$$', 'interpreter', 'latex');
+ylabel('$$\mbox{P}(X = k)$$', 'interpreter', 'latex');
 legend([practical_plot theory_plot], ...
         {'Результат датчика', 'Теоретический результат'});
 clear practical_plot theory_plot;
@@ -50,11 +51,14 @@ results     = ( p ) * ( 1 - p ).^ks;
 theory_plot = plot(ks, results, '*');
 clear ks results;
 
+% Двигаем оси правильно
+alpha = 0.0005;                             % Сколько можно не включить
+f_inv = @(x) log(1 - x) / log(1 - p) - 1;   % Обратная функция распределения
+xlim([0, f_inv(1-alpha)]);
+
 % Делаем графики красивыми
-title(sprintf(...
-        'Распределение случайной величины X~Geom (%4.2f)', p));
-xlabel('k');
-ylabel('P(X = k)');
+xlabel('$$k$$', 'interpreter', 'latex');
+ylabel('$$\mbox{P}(X = k)$$', 'interpreter', 'latex');
 legend([practical_plot theory_plot], ...
         {'Результат датчика', 'Теоретический результат'});    
 
