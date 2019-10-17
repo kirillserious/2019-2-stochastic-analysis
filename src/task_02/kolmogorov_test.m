@@ -2,9 +2,10 @@ function p_value = kolmogorov_test(emps, theorys, mode)
 % Критерий Колмогорова. Считает p-значение.
 %
 % Input arguments:
-%    emps    -- [1, N]          -- эмперическое распределение
-%    theorys -- [1, N]          -- теоретическое распределение
-%    mode    -- str = 'default' -- режим 
+%    emps    -- [1, N]          --   эмперическое распределение
+%    theorys -- [1, N]          --   теоретическое распределение в соотв.
+%                                  точках
+%    mode    -- str = 'default' --   режим 
     if nargin < 3
         mode = 'default';
     end
@@ -53,21 +54,4 @@ function p_value = kolmogorov_test(emps, theorys, mode)
         legend('Kolmogorov distribution function $F_K$',...
             '$$F_K(\sqrt{n}D_n)$$', 'interpreter', 'latex');
     end     
-end
-
-function result = kolmogorov_fcn (x)
-% Вычисляет значение функции распределения Колмогорова в заданной точке
-% Input arguments:
-%    x -- scalar
-    
-    if x < 0.17
-    % Предел вычислительной мощности. Число порядка 10^(-9)
-        result = 0;
-        return
-    end
-    
-    ks = 1 : 100;
-    result = 1 + 2 * sum( ...
-            (-1).^ks .* exp(-2 * (ks.^2) .* (x)^2) ...
-        );
 end
