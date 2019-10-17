@@ -5,20 +5,33 @@ figure();
 hold on;
 grid on;
 
-cantors = cantor_generate(N);
+[cantors, ks] = cantor_generate(N);
+
+% Строим график имперической функции распределения
 [fs, xs] = ecdf(cantors);
 plot(xs, fs);
 
-[fs, xs] = devils_staircase();
-plot(xs, fs);
-
+% Строим график теоритической функции распределения
+[sorted_cantors, ind, ~] = unique(cantors);
+plot(sorted_cantors, ks(ind));
+    % Тут все по-настоящему, но работает рекурсивно.
+    % Используется для красивых графиков.
+    %
+    % [fs, xs] = devils_staircase(20);
+    % plot(xs, fs);
 legend({'Эмпирическая функция распределения', 'Канторова лестница'});
 xlabel('$$x$$', 'interpreter', 'latex');
 
+% Проверка по критерию Колмогорова
+test = kolmogorov_test(cantors, ks);
+disp('Уровень значимости: ')
+disp(1 - test);
+
 clear cantors xs fs;
+
 %% Задача №3. Иллюстрируем сходимость мат.ожидания и дисперсии.
 left_N  = 50000;
-right_N = 100000;
+right_N = 1000;
 
 figure;
 hold on;
@@ -64,3 +77,4 @@ function [f, x] = devils_staircase(recdepth)
         f = [fl, fr, f_value, f_value];
     end
 end
+
