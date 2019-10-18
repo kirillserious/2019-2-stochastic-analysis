@@ -4,6 +4,9 @@ function p_value = smirnov_test(xs, ys)
 %    xs -- [1, N] -- выборка из первого распределения
 %    ys -- [1, M] -- выборка из второго распределения
 
+    n = numel(xs); % Запоминем размер выборки                                     
+    m = numel(ys); %
+    
     xs = sort(xs); % Сортируем выборки
     ys = sort(ys); %
     
@@ -32,10 +35,8 @@ function p_value = smirnov_test(xs, ys)
             max(abs(yfs - xfs(ind_for_x))), ... %
             max(abs(xfs - yfs(ind_for_y)))  ... %
             );                                  %
-    
-    n = numel(xs) - 1;                                     % Считаем ответ
-    m = numel(ys) - 1;                                     %  
-    p_value = kolmogorov_fcn(sqrt((n * m) / (n + m)) * d); %
+                                        
+    p_value = kolmogorov_fcn(sqrt((n * m) / (n + m)) * d); % Считаем ответ
 end
 
 
