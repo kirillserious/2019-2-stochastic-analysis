@@ -102,10 +102,10 @@ legend('Результат датчика', 'Теоретический резу
 clear
 %% Задача 3
 % Строим распределение Пуассона, как приближение биномиальным
-n = 100;
-lambda = 1;
+n = 1000;
+lambda = 5;
 
-bin_n = 1000 * lambda;
+bin_n = 10000 * lambda;
 bin_p = lambda / bin_n;
 
 xs = bi_generate(bin_n, bin_p, 1, n);
