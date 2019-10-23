@@ -1,9 +1,9 @@
 % Задание 2
-%% Задача №1
+%% Задача №1 (а)
 %   Строим графики эмпирической и теоретической функций распределения.
 %   Считаем уровень значимости по критерию Колмогорова.
 
-N = 10000;    % Размер выборки
+N = 1000;    % Размер выборки
 
 figure();
 hold on;
@@ -11,13 +11,13 @@ grid on;
 
 [cantors, ks] = cantor_generate(N);
 
-% Строим график имперической функции распределения
+% Строим график эмперической функции распределения
 [fs, xs] = ecdf(cantors);
-plot(xs, fs);
+stairs(xs, fs);
 
 % Строим график теоритической функции распределения
 [sorted_cantors, ind, ~] = unique(cantors);
-plot(sorted_cantors, ks(ind));
+stairs(sorted_cantors, ks(ind));
     % Тут все по-настоящему, но работает рекурсивно.
     % Используется для красивых графиков.
     %
@@ -32,41 +32,120 @@ disp('Уровень значимости: ')
 disp(1 - test);
 
 clear cantors xs ks fs;
+%% Задача № 1(б)
+% Табличка для уровня значимости Колмогорова
+n = 1000;     % Число испытаний
+m = 1000;     % Размер выборки
+alpha = 0.1; % Уровень значимости
+
+success_count = 0;
+for i = 1:n
+    [xs, ks] = cantor_generate(m);
+    test = kolmogorov_test(xs, ks);
+    if (1 - test > alpha)
+        success_count = success_count + 1;
+    end
+end
+
+disp('Процент принятия гипотезы:');
+disp(success_count / n);
+
+clear
 
 %% Задача №2 (а)
 % Считаем уровень значимости по критерию Смирнова для X и (1 - X).
 
-n = 100;  % Размер выборки первой случайной величины
-m = 1000; % Размер выборки второй случайной величины
+s = 1000;     % Число испытаний
+n = 100;      % Размер выборки первой случайной величины
+m = 1000;     % Размер выборки второй случайной величины
+alpha = 0.05; % Уровень значимости
+
+success_count = 0;
+for i = 1:s
+    [xs, ~] = cantor_generate(n);
+    [ys, ~] = cantor_generate(m);
+    ys = 1 - ys;
+    
+    test = smirnov_test(xs, ys);
+    if (1 - test > alpha)
+        success_count = success_count + 1;
+    end
+end
+
+disp('Процент принятия гипотезы:');
+disp(success_count / s);
+clear
+
+%%
+% Построим функции распределения
+n = 10000;      % Размер выборки первой случайной величины
+m = 10000;     % Размер выборки второй случайной величины
 
 [xs, ~] = cantor_generate(n);
 [ys, ~] = cantor_generate(m);
+ys = 1 - ys;
 
-test = smirnov_test(xs, ys);
-disp('Уровень значимости:');
-disp(1 - test);
+figure(), hold on, grid on;
+[fs, xs] = ecdf(xs);
+stairs(xs, fs, 'LineWidth', 1.5);
+[fs, ys] = ecdf(ys);
+stairs(ys, fs, 'LineWidth', 1.5);
 
-clear xs ys n m;
+legend({'$$F_X$$', '$$F_{1 - X}$$'}, ...
+        'interpreter', 'latex');
+xlabel('$$x$$', 'interpreter', 'latex');
+
+clear
 %% Задача №2 (б)
 % Считаем уровень значимости по критерию Смирнова для (X | X < 1/3) и (1/3 X).
 
-n = 100;  % Размер выборки первой случайной величины
-m = 1000; % Размер выборки второй случайной величины
+s = 1000;     % Число испытаний
+n = 1000;      % Размер выборки первой случайной величины
+m = 1000;     % Размер выборки второй случайной величины
+alpha = 0.1; % Уровень значимости
+
+success_count = 0;
+for i = 1:s
+    [xs, ~] = cantor_generate(n);
+    [ys, ~] = cantor_generate(m);
+
+    xs = xs(xs < 1/3);
+    ys = ys / 3;
+
+    test = smirnov_test(xs, ys);
+    if (1 - test > alpha)
+        success_count = success_count + 1;
+    end
+end
+
+disp('Процент принятия гипотезы:');
+disp(success_count / s);
+clear
+
+%%
+% Построим функции распределения
+n = 10000;      % Размер выборки первой случайной величины
+m = 10000;     % Размер выборки второй случайной величины
 
 [xs, ~] = cantor_generate(n);
 [ys, ~] = cantor_generate(m);
-
 xs = xs(xs < 1/3);
 ys = ys / 3;
 
-test = smirnov_test(xs, ys);
-disp('Уровень значимости:');
-disp(1 - test);
+figure(), hold on, grid on;
+[fs, xs] = ecdf(xs);
+stairs(xs, fs, 'LineWidth', 1.5);
+[fs, ys] = ecdf(ys);
+stairs(ys, fs, 'LineWidth', 1.5);
 
-clear xs ys n m;
+legend({'$$F_{X\,|\,X\in\left[0,\,\frac{1}{3}\right]}$$', '$$F_{\frac{X}{3}}$$'}, ...
+        'interpreter', 'latex');
+xlabel('$$x$$', 'interpreter', 'latex');
+
+clear
 %% Задача №3. Иллюстрируем сходимость мат.ожидания и дисперсии.
-left_N  = 50000;
-right_N = 1000;
+left_N  = 100;
+right_N = 10000;
 
 figure;
 hold on;
@@ -76,12 +155,27 @@ ns = 1:right_N;
 cantors = cantor_generate(right_N);
 expecteds = cumsum(cantors) ./ ns;
 
-plot(left_N:right_N, expecteds(left_N:end));
-plot([left_N, right_N], [0.5, 0.5]);
+plot(left_N:right_N, expecteds(left_N:end), 'LineWidth', 1.5);
+plot([left_N, right_N], [0.5, 0.5], 'LineWidth', 1.5);
 xlabel('$$n$$', 'interpreter', 'latex');
-legend({'$$E\,[X] = \frac{X_1 + \ldots + X_n}{n}$$', '$$E\,[X] = \frac12$$'}, 'interpreter', 'latex');
+xlim([left_N, right_N]);
+legend({'Выборочное среднее', 'Мат. ожидание'});
 
-clear ns cantors expecteds;
+figure, hold on, grid on;
+
+var = [];
+for i = left_N:right_N
+   tmp = cantors(1:i);
+   var = [var, 1/(i) * (sum((tmp - expecteds(i)).^2))];
+end
+
+plot(left_N:right_N, var, 'LineWidth', 1.5);
+plot([left_N, right_N], [0.125, 0.125], 'LineWidth', 1.5);
+xlabel('$$n$$', 'interpreter', 'latex');
+xlim([left_N, right_N]);
+legend({'Несмещенная выборочная дисперсия', 'Дисперсия'});
+
+clear
 
 function [f, x] = devils_staircase(recdepth)
 % Строит канторову лестницу. Работает рекурсивным образом.

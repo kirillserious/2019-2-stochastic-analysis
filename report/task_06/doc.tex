@@ -1,0 +1,121 @@
+\section{Задание №6}
+\begin{enumerate}
+        \item Посчитать интеграл
+$$
+        \int\limits_{-\infty}^{+\infty}
+        \int\limits_{-\infty}^{+\infty}
+        \ldots
+        \int\limits_{-\infty}^{+\infty}
+        \frac
+        {
+                e^{-\left(x_1^2 + \ldots +x_{10}^2 + \frac{1}{2^7 \cdot x_1^2 \cdot \ldots \cdot x_{10}^2}\right)}
+        }
+        {
+                x_1^2 \cdot \ldots \cdot x_{10}^2
+        }
+        \, dx_1 dx_2 \ldots dx_{10}
+$$
+        \begin{itemize}
+                \item[-] методом Монте--Карло;
+                \item[-] методом квадратур, сводя задачу к вычислению собственного интеграла Римана.
+        \end{itemize}
+        \item Для каждого случая оценить точность вычислений.
+\end{enumerate}
+
+
+\subsection{Метод Монте--Карло}
+В данном разделе найдем методом Монте--Карло искомый интеграл и оценим точность вычислений. Для начала обозначим данный интеграл и подынтегральную функцию
+$$
+        I
+        =
+        \int\limits_{-\infty}^{+\infty}
+        \int\limits_{-\infty}^{+\infty}
+        \ldots
+        \int\limits_{-\infty}^{+\infty}
+        \underbrace{
+                \frac
+                {
+                        e^{-\left(x_1^2 + \ldots +x_{10}^2 + \frac{1}{2^7 \cdot x_1^2 \cdot \ldots \cdot x_{10}^2}\right)}
+                }
+                {
+                        x_1^2 \cdot \ldots \cdot x_{10}^2
+                }
+        }_{f(x)}
+        \, dx_1 dx_2 \ldots dx_{10}.
+$$
+
+Пусть $\rho(x)$ --- плотность некоторой случайной величины $X$, имеющей абсолютно непрерывное распределение. Обозначим за $\hat f(x) = \frac{f(x)}{\rho(x)}$. Тогда
+$$
+        \int\limits_{\R^n} f(x)\,dx
+        =
+        \int\limits_{\R^n} \frac{f(x)}{\rho(x)} \rho(x) \,dx
+        =
+        \int\limits_{\R^n} \hat f(x) \rho(x) \,dx
+        =
+        \E \hat f(X).
+$$
+Получается, что задача вычисления интеграла сводится к вычислению математического ожидания случайной величины $Y = \hat f(X)$. Согласно закону больших чисел (см. теорему~\ref{th:big_numbers})
+$$
+        Y_n
+        =
+        \frac {
+                \sum_{i=1}^n \hat f(x^i)
+        } {
+                n
+        }
+        \xrightarrow{n \to \infty}
+        \E \hat f(X),
+        \quad
+        \mbox{где $\{x^i\}_{i = 1}^n$ --- выборка случайной величины $X$.}
+$$
+Поэтому в дальнейшем будем считать математическое ожидание, полагая
+$$
+        \E \hat f(X) \approx Y_n.
+$$
+
+Для подсчета интеграла $I$ возьмем случайную величину $X$, имеющую десятимерное стандартное нормальное распределение, то есть $X \sim \mbox{N} (O,\,I)$, где $O,\,I \in \R^{10 \times 10}$, $O$ --- нулевая матрица, $I$ --- единичная матрица. Плотность такой случайной величины выражается формулой
+$$
+        \rho(x)
+        =
+        \frac{1}{(2\pi)^5}
+        e^{-\frac{x_1^2 + \ldots + x_{10}^2}{2}}.
+$$
+Тогда
+$$
+\boxed{
+        \hat f(x) = \frac{f(x)}{\rho(x)}
+        =
+        (2\pi)^5
+        \frac
+        {
+                e^{-\left(\frac{x_1^2 + \ldots + x_{10}^2}{2} + \frac{1}{2^7 \cdot x_1^2 \cdot \ldots \cdot x_{10}^2}\right)}
+        }
+        {x_1^2 \cdot \ldots \cdot x_{10}^2}.
+}
+$$
+Таким образом, мы можем посчитать значение интеграла $I$ по формуле
+$$
+\boxed{
+        I
+        \approx
+        \frac
+        {\sum_{i=1}^{n} \hat f(x^i)}
+        {n},
+        \quad
+        \mbox{где $x^i = (x_1^i,\,\ldots,\,x_{10}^i)$, $x_k^i\sim\mbox{N}(0,\,1)$, $k = \overline{0,\,10}$.}
+}
+$$
+
+Теперь оценим точность вычисления интеграла методом Монте--Карло. Для этого воспользуемся центоральной предельной теоремой (см. теорему \ref{th:central_limit}):
+\begin{multline*}
+        \p(|Y_n - I| < \varepsilon)
+        =
+        \p\left( \left| \frac{S_n - nI}{n} \right| < \varepsilon \right)
+        =
+        \p\left( \left| \frac{S_n - nI}{\sqrt{n}\sigma_n} \right| < \frac{\varepsilon\sqrt{n}}{\sigma_n} \right)
+        =\\=
+        \p\left( \frac{S_n - nI}{\sqrt{n}\sigma_n}  < \frac{\varepsilon\sqrt{n}}{\sigma_n} \right)
+        -
+        \p\left( \frac{S_n - nI}{\sqrt{n}\sigma_n}  < -\frac{\varepsilon\sqrt{n}}{\sigma_n} \right)
+        \\
+\end{multline*}
