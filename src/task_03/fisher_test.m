@@ -1,4 +1,4 @@
-function [statistic, freedom_degrees, p_value] = fisher_test (xs, ys)
+function [statistic, freedom_degrees] = fisher_test (xs, ys)
     n = numel(xs);
     x_mean = sum(xs) / n;
     x_var  = sum((xs - x_mean).^2) / (n - 1);
@@ -9,6 +9,5 @@ function [statistic, freedom_degrees, p_value] = fisher_test (xs, ys)
     
     statistic = x_var / y_var;
     freedom_degrees = [n- 1, m - 1];
-    [~, p_value] = vartest2(xs, ys);
 end
 

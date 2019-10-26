@@ -102,10 +102,10 @@ legend('Результат датчика', 'Теоретический резу
 clear
 %% Задача 3
 % Строим распределение Пуассона, как приближение биномиальным
-n = 1000;
+n = 10000;
 lambda = 5;
 
-bin_n = 10000 * lambda;
+bin_n = 100 * lambda;
 bin_p = lambda / bin_n;
 
 xs = bi_generate(bin_n, bin_p, 1, n);
@@ -124,45 +124,102 @@ plot(0:r_bound, prob_fcn(0:r_bound), '*');
 xlabel('$$k$$', 'interpreter', 'latex');
 legend('Результат датчика', 'Теоретический результат');
 
-[chisquare, freedom_degrees, p_value] = chisquare_test(xs, prob_fcn);
+[chisquare, freedom_degrees] = chisquare_test(xs, prob_fcn);
 
 disp('Хи-квадрат:');
 disp(chisquare);
 disp('Степеней свободы:');
-disp(freedom_degrees);
-disp('Уровень значимости:');
-disp(1 - p_value);
 
+disp(freedom_degrees);
+disp('Квантиль порядка 0,95:');
+disp(chi2inv(0.95, freedom_degrees));
+
+clear
+%%
+% Табличка с хи-квадратом
+n = 100;      % Число замеров
+alpha = 0.05; % Уровень значимости
+
+
+lambda = 5; 
+prob_fcn =@(ks) (exp(-lambda) * lambda .^ ks) ./ factorial(ks);
+
+bin_n = 1000 * lambda;
+bin_p = lambda / bin_n;
+success_count = 0;
+
+for i = 1:n
+    xs = bi_generate(bin_n, bin_p, 1, 100);
+    [chisquare, freedom_degrees] = chisquare_test(xs, prob_fcn);
+    if chisquare < chi2inv(1 - alpha, 16)
+        success_count = success_count +1;
+    end
+end
+
+disp('Частота принятия гипотезы:');
+disp(success_count/n);
 clear
 %% Задача №4
 % Строим гистограмму стандартного нормального распределения
-n = 10000; % Размер выборки
+n = 1000; % Размер выборки
 
 xs = stdnormal_generate(1, n);
 
 figure(), hold on, grid on;
 histogram(xs, 'Normalization', 'pdf');
 rho_fcn = @(xs) 1 / sqrt(2*pi) * exp(- (xs.^2) / 2);
-plot(-3:0.01:3, rho_fcn(-3:0.01:3));
+plot(-3:0.01:3, rho_fcn(-3:0.01:3), 'LineWidth', 1.5);
 xlim([-3, 3]);
 % Делаем красиво
-xlabel('$$k$$', 'interpreter', 'latex');
+xlabel('$$x$$', 'interpreter', 'latex');
 legend('Результат датчика', 'Теоретический результат');
 
 disp('Проверка равенства мат. ожиданий');
-[t, fd, p] = student_test(xs, 0);
+[t, fd] = student_test(xs, 0);
 disp('t-статистика:');
 disp(t);
 disp('Степеней свободы:');
 disp(fd);
-disp('Уровень значимости:');
-disp(1 - p);
 
 disp('Проверка равенства дисперсий');
-[f, fd, p] = fisher_test(xs, [-1, 1]);
+[f, fd] = fisher_test(xs, [-1, 1]);
 disp('f-статистика:');
 disp(f);
 disp('Степеней свободы:');
 disp(fd);
-disp('Уровень значимости:');
-disp(1 - p);
+
+%%
+% Табличка со Стьюдентом
+n = 1000;
+m = 1000;
+alpha = 0.05;
+success_count = 0;
+for i = 1:n
+    xs = stdnormal_generate(1, m);
+    [t, fd] = student_test(xs, 0);
+    if (t < tinv(1-alpha/2, fd) && t > tinv(alpha/2, fd))
+        success_count = success_count + 1;
+    end
+end
+
+disp('Частота принятия гипотезы:');
+disp(success_count / n);
+
+%%
+% Табличка с Фишером
+% Табличка со Стьюдентом
+n = 1000;
+m = 1000;
+alpha = 0.05;
+success_count = 0;
+for i = 1:n
+    xs = stdnormal_generate(1, m);
+    ys = 2 * (bern_generate(0.5, 1, m) - 0.5);
+    [f, fd] = fisher_test(xs, ys);
+    if (f < finv(1-alpha/2, fd(1), fd(2)) && f > finv(alpha/2, fd(1), fd(2)))
+        success_count = success_count + 1;
+    end
+end
+
+disp('Частота принятия гипотезы:');
+disp(success_count / n);
