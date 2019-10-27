@@ -117,5 +117,17 @@ $$
         \p\left( \frac{S_n - nI}{\sqrt{n}\sigma_n}  < \frac{\varepsilon\sqrt{n}}{\sigma_n} \right)
         -
         \p\left( \frac{S_n - nI}{\sqrt{n}\sigma_n}  < -\frac{\varepsilon\sqrt{n}}{\sigma_n} \right)
-        \\
+        \approx
+        F_N\left(\frac{\varepsilon\sqrt{n}}{\sigma_n}\right) - F_N\left(-\frac{\varepsilon\sqrt{n}}{\sigma_n}\right)
+        =\\=
+        2 F_N\left(\frac{\varepsilon\sqrt{n}}{\sigma_n}\right) - 1
+        =
+        1 - \alpha.
 \end{multline*}
+$$
+        \Downarrow
+$$
+$$
+        \varepsilon = K_{1 - \nicefrac{\alpha}{2}}\cdot \frac{\sigma_n}{\sqrt{n}},
+$$
+где $\sigma_n$ --- несмещенная выборочная дисперсия, $F_N$ --- функция стандартного нормального распределения, а $K_\alpha$ --- его квантиль порядка $\alpha$. Таким образом для уровня значимости $\alpha = 0,05$ погрешность будет равна $\varepsilon = 1,96\frac{\sigma_n}{\sqrt{n}}$.
