@@ -16,5 +16,6 @@ function [xs, times] = weiner(t0, t1, x0, x1, alpha, eps)
         
         xs    = [xs_left,    x, xs_right];
         times = [times_left, t, times_right];
+    end
 end
 
