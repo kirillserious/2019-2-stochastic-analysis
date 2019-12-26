@@ -242,9 +242,6 @@ $$
 \end{remark}
 
 
-
-
-
 \clearpage
 \begin{figure}[t]
         \noindent
@@ -448,4 +445,126 @@ $$
         \right\}.
 $$
 
+
 \subsubsection{Алгоритм}
+
+Процесс Орнштейна--Уленбека марковский. Это говорит нам о том, что имея значения случайных величин $W(t_1)$ и $W(t_2)$, мы всегда можем сгенерировать случайную величину $W(t)$, где $t_1 \leqslant t \leqslant t_2$. Дальнейшие рассуждения проведем аналогично рассмотренному выше винеровскому процессу. То есть зафиксируем точку $t = \frac{t_1 - t_1}{2}$ и найдем условную плотность
+$$
+        \rho_{W(t)}(W(t_1) = x_1, W(t_2) = x_2)
+=
+        \frac
+        {
+\rho_{W(t_1), W(t), W(t_2)}(x_1, x, x_2)
+        }
+        {
+\rho_{W(t_1),W(t_2)}(x_1,x_2).
+        }
+$$
+
+Так как процесс $W(t)$ гауссовский, то мы знаем эти плотности:
+$$
+        \rho_{W(t_1), W(t_2)}
+=
+        \frac {1}{
+2\pi \sqrt{|R_2|}
+        }
+        \exp\left\{
+-\frac12 \hat x^{\T} R_2^{-1} \hat x
+        \right\},
+$$
+$$
+        \rho_{W(t_1), W(t), W(t_2)}
+        (x_1, x, x_2)
+=
+        \frac1{
+(2\pi)^{\nicefrac32} \sqrt{|R_3|}
+        }
+        \exp\left\{
+-\frac12 \hat{\hat x}^{\T} R_1^{-1}\hat{\hat x}
+        \right\}.
+$$
+Здесь $\hat x = [x_1, x_2]$, $\hat{\hat x} = [x_1, x, x_2]$,
+$$
+        R_2
+=
+        \sigma^2
+        \begin{pmatrix}
+1 & e^{-\lambda (t_2 - t_1)} \\
+e^{-\lambda (t_2 - t_1)} & 1
+        \end{pmatrix},
+\quad
+        R_3
+=
+        \sigma^2
+        \begin{pmatrix}
+1 &
+e^{-\lambda (t - t_1)} &
+e^{-\lambda (t_2 - t_1)} \\
+e^{-\lambda (t - t_1)} &
+1 &
+e^{-\lambda} (-\lambda) (t_2 - t) \\
+e^{-\lambda (t_2 - t_1)} &
+e^{-\lambda (t_2 - t_1))} &
+1
+        \end{pmatrix}.
+$$
+
+Если подставить результаты в формулу условной плотности, то получим следующий результат:
+$$
+        W(t)
+\sim
+        \mathrm{N}\left(
+(x_1 + x_2)
+\frac{
+        e^{
+-\frac{
+        -\lambda (t_2 - t_1)
+}{
+2
+}
+        }
+}{
+        1 + e^{
+-\lambda (t_2 - t_1)
+        }
+}
+        ,\;
+\sigma^2 \frac{
+        1 - e^{
+-\lambda(t_2 - t_1)
+        }
+}{
+        1 + e^{
+-\lambda(t_2 - t_1)
+        }
+}
+        \right).
+$$
+В качестве граничных значений возьмем:
+$$
+        W(0)\sim \mathrm{N}(0,\,\sigma^2),
+\qquad
+        W(1) \sim \mathrm{N}\left(x_0 e^{-\lambda T},\,\sigma^2\left( 1 - e^{-2\lambda T}\right)\right).
+$$
+\begin{remark}
+        Также построим доверительный интервал правилом трех сигм.
+\end{remark}
+
+
+\clearpage
+\begin{figure}[t]
+        \noindent
+        \centering
+        {
+                \includegraphics[width=120mm]{task_09/ou-l-20-s3.eps}
+        }
+        \caption{Поточечный график процесса Орштейна--Уленбека с параметрами $\lambda = 20$, $\sigma^2 = 3$ демонстрирует его непрерывность. Погрешность алгоритма была взята $\varepsilon = 10^{-5}$.}
+\end{figure}
+\begin{figure}[b]
+        \noindent
+        \centering
+        {
+                \includegraphics[width=120mm]{task_09/50-ou.eps}
+        }
+        \caption{Представлены 50 процессов Оршетейна--Уленбека с параметрами $\lambda = 20$, $\sigma^2 = 3$.}
+\end{figure}
