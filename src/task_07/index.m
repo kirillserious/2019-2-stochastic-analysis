@@ -84,7 +84,7 @@ clear
 
 %% Задача 2 (б)
 % Метод отжига
-n = 1000;
+n = 100;
 mins = zeros(1, n);
 for i = 1:n
     mins(i) = annealing_method(1000);
